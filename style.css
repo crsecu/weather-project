@@ -1,0 +1,70 @@
+body {
+    background-color: darkgray !important;
+}
+
+h1 {
+    text-align: center;
+}
+
+
+.temp-degrees {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.location {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.description {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+/* .weather-info {
+    border: 1px solid black;
+    border-right: none;
+}
+
+.weather-info:last-child {
+    border-right: 1px solid black;
+}
+
+.five-days-forecast {
+    display: flex;
+} */
+
+.square-box {
+    background-color: #eaeaea;
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .tooltip {
+    position: relative;
+    display: inline-block;
+  }
+
+  .tooltiptext {
+    visibility: hidden;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
