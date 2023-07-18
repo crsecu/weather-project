@@ -1,14 +1,16 @@
 //grab user input
 document.querySelector("#submit-button").addEventListener("click", function () {
   let userQuery = document.querySelector("#user-input").value;
-  if (userQuery === '') {
-    var tooltip = document.querySelector('.tooltip');
-    tooltip.classList.add('show');
+  if (userQuery.trim() === "") {
+    var errorMessage = document.querySelector("#error-message");
+    errorMessage.textContent = "Please enter a search query.";
+    errorMessage.style.display = "block";
     return false; // Prevent form submission
   }
   getGeoCoordinates(userQuery);
   document.querySelector("#user-input").value = "";
   document.querySelector(".five-days-forecast").innerHTML = "";
+  document.querySelector("#error-message").innerHTML = "";
 });
 
 //grab geo coordinates from the API
@@ -28,7 +30,7 @@ function getGeoCoordinates(userQuery) {
     .then((data) => {
       if (data.length !== 0) {
         getData(data);
-        console.log('data', data);
+        console.log("data", data);
       } else {
         document.querySelector(".weather-details").innerHTML =
           "Invalid location.";
@@ -75,7 +77,7 @@ function get5DayWeather(apiKey, lat, lon) {
     .catch((error) => console.error(error));
 
   function Weather5day(data) {
-    console.log('checking data', data);
+    console.log("checking data", data);
     const limit = 8;
     let grabDays = [];
     let forecast = [];
@@ -85,40 +87,38 @@ function get5DayWeather(apiKey, lat, lon) {
       let group = data.list.slice(i, i + limit);
       grabDays.push(group);
     }
-    
+
     //iterate over the array that holds 5 day forecast and grab latest 3hrs forecast
     for (let e = 0; e < grabDays.length; e++) {
       let oneDay = grabDays[e];
       let average = oneDay.slice(-1)[0];
       forecast.push(average);
-      
     }
-  
+
     display5DayWeather(forecast);
   }
 
-    function display5DayWeather(dayAverage) {
+  function display5DayWeather(dayAverage) {
+    for (let a = 0; a < dayAverage.length; a++) {
+      let forecastDetails = dayAverage[a];
+      let temperature = Math.round(forecastDetails.main.temp);
+      let description = forecastDetails.weather[0].main;
 
-     for(let a = 0; a < dayAverage.length; a++) {
-        let forecastDetails = dayAverage[a];
-        let temperature = Math.round(forecastDetails.main.temp);
-        let description = forecastDetails.weather[0].main;
+      //convert date string into correspoding week day
+      const dateString = forecastDetails.dt_txt;
+      const date = new Date(dateString);
+      const daysOfWeek = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ];
+      const dayOfWeek = daysOfWeek[date.getDay()];
 
-        //convert date string into correspoding week day
-        const dateString = forecastDetails.dt_txt;
-        const date = new Date(dateString);
-        const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        const dayOfWeek = daysOfWeek[date.getDay()];
-
-        // let template5DayForecast = `
-        //   <div class="col-2 weather-info border border-dark">
-        //     <p class="description">${description}</p>
-        //     <p class="temp-degrees">${temperature}&deg</p>
-        //     <p class="day">${dayOfWeek}</p>
-        //   </div>
-        //  `;
-
-        let template5DayForecast = `
+      let template5DayForecast = `
           <div class="col-md-6 col-lg-2">
             <div class="square-box"
               <p class="description">${description}</p>
@@ -127,13 +127,11 @@ function get5DayWeather(apiKey, lat, lon) {
             </div>
           </div>
          `;
-         document.querySelector(".five-days-forecast").innerHTML += template5DayForecast;
-     }
-
-      
+      document.querySelector(".five-days-forecast").innerHTML +=
+        template5DayForecast;
     }
   }
-
+}
 
 function getWeather(locationInfo, locationName) {
   let wheather = locationInfo.weather[0].main;
